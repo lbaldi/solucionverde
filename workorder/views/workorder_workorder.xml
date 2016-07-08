@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<openerp>
+    <data>
+
+        <record id="workorder_workorder_form" model="ir.ui.view">
+            <field name="name">Orden de Trabajo</field>
+            <field name="model">workorder.workorder</field>
+            <field name="arch" type="xml">
+                <form string="Orden de trabajo">
+                    <header>
+                        <field name="state"
+                               widget="statusbar"
+                               clickable="False"
+                               statusbar_colors="{'pending':'red','done':'blue','cashed':'green'}"
+                        />
+                    </header>
+                    <sheet>
+                        <group>
+                            <h1>
+                                <field name="name" readonly="True"/>
+                            </h1>
+                        </group>
+                        <group>
+                            <group string="Contratante / Cliente">
+                                <field name="contrator_id"/>
+                                <field name="customer_id"/>
+                            </group>
+                            <group string="Fechas">
+                                <field name="date" readonly="True"/>
+                                <field name="date_planned"/>
+                                <field name="date_execution"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Servicio">
+                                <group>
+                                    <field name="service_type_id"/>
+                                    <field name="truck_id"/>
+                                    <field name="system_type"/>
+                                    <field name="container_id"/>
+                                    <field name="driver_id"/>
+                                    <field name="place_id"/>
+                                </group>
+                                <group>
+                                    <field name="note" placeholder="Datos adicionales..."/>
+                                </group>
+                            </page>
+                            <page string="Documentos">
+                                <group>
+                                    <field name="picking_number"/>
+                                    <field name="reference_number"/>
+                                    <field name="invoice_number"/>
+                                    <field name="cashed"/>
+                                </group>
+                            </page>
+                            <page string="Configuracion">
+                                <group>
+                                    <field name="user_id"/>
+                                    <field name="active"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="workorder_workorder_tree" model="ir.ui.view">
+            <field name="name">Ordenes de Trabajo</field>
+            <field name="model">workorder.workorder</field>
+            <field name="arch" type="xml">
+                <tree string="Ordenes de Trabajo">
+                    <field name="name"/>
+                    <field name="contrator_id"/>
+                    <field name="customer_id"/>
+                    <field name="date_planned"/>
+                    <field name="date_execution"/>
+                    <field name="system_type"/>
+                    <field name="driver_id"/>
+                    <field name="place_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="workorder_workorder_calendar" model="ir.ui.view">
+            <field name="name">Ordenes de Trabajo</field>
+            <field name="model">workorder.workorder</field>
+            <field name="arch" type="xml">
+                <calendar string="Ordenes de Trabajo" date_start="date_planned" color="driver_id" quick_add="false">
+                    <field name="name"/>
+                    <field name="customer_id"/>
+                    <field name="driver_id"/>
+                    <field name="system_type"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="workorder_workorder_search" model="ir.ui.view">
+            <field name="name">Ordenes de Trabajo</field>
+            <field name="model">workorder.workorder</field>
+            <field name="arch" type="xml">
+                <search string="Ordenes de Trabajo">
+
+                    <field name="name"/>
+                    <field name="contrator_id"/>
+                    <field name="customer_id"/>
+                    <field name="date"/>
+                    <field name="date_planned"/>
+                    <field name="date_execution"/>
+                    <field name="service_type_id"/>
+                    <field name="truck_id"/>
+                    <field name="system_type"/>
+                    <field name="container_id"/>
+                    <field name="driver_id"/>
+                    <field name="place_id"/>
+                    <field name="picking_number"/>
+                    <field name="reference_number"/>
+                    <field name="invoice_number"/>
+                    <field name="invoice_number"/>
+                    <field name="user_id"/>
+
+                    <group expand="0" string="Agrupar por..." colspan="16">
+                        <filter string="Contratante" context="{'group_by':'contrator_id'}"/>
+                        <filter string="Cliente" context="{'group_by':'customer_id'}"/>
+                        <filter string="Periodo Carga" context="{'group_by':'date'}"/>
+                        <filter string="Periodo Ejecucion" context="{'group_by':'date_execution'}"/>
+                        <filter string="Periodo Planificado" context="{'group_by':'date_planned'}"/>
+                        <filter string="Servicio" context="{'group_by':'service_type_id'}"/>
+                        <filter string="Camion" context="{'group_by':'truck_id'}"/>
+                        <filter string="Sistema" context="{'group_by':'system_type'}"/>
+                        <filter string="Container" context="{'group_by':'container_id'}"/>
+                        <filter string="Chofer" context="{'group_by':'driver_id'}"/>
+                        <filter string="Lugar Descarga" context="{'group_by':'place_id'}"/>
+                        <filter string="Usuario" context="{'group_by':'user_id'}"/>
+                    </group>
+                    <group expand="0" string="Filtrar por..." colspan="16">
+                        <filter string="Pendientes" domain="[('state','=', 'pending')]"/>
+                        <filter string="Realizados" domain="[('state','=', 'done')]"/>
+                        <filter string="Cobrados" domain="[('state','=', 'cashed')]"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="workorder_workorder_action" model="ir.actions.act_window">
+            <field name="name">Ordenes de Trabajo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">workorder.workorder</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Cree una orden de trabajo desde aqui
+              </p>
+            </field>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="workorder_menu_general_workorder"
+                  name="Ordenes de Trabajo"
+                  parent="workorder_menu_general"
+                  action="workorder_workorder_action"
+                  sequence="10"
+        />
+
+    </data>
+</openerp>
+
+<!-- vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4-->
